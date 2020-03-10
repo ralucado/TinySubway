@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DrawCurve : MonoBehaviour
+public class LineDrawer : MonoBehaviour
 {
     public GameObject lineRendererPrefab;
 
@@ -11,36 +11,69 @@ public class DrawCurve : MonoBehaviour
 
     private LineRenderer line;
 
-    public GameObject[] stations;
+    public List<GameObject> stations;
+
+    private Vector3 mousePosition;
+
+    private bool selectMode;
+
+    public void addStation(GameObject station)
+    {
+        stations.Add(station);
+    }
+
+    public void setMousePosition(Vector3 position)
+    {
+        mousePosition = position;
+    }
+
+    public void setSelectMode(bool mode)
+    {
+        selectMode = mode;
+    }
 
     private void Start()
     {
-
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
-
-        stations = GameObject.FindGameObjectsWithTag("station");
+        //stations = GameObject.FindGameObjectsWithTag("station");
         lineRendererObjects = new List<GameObject>();
+        selectMode = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-
         destroyPreviousLineRendererObjects();
+        if (stations.Count > 0)
+            drawLineBetweenStations();
+        if (selectMode)
+            drawMousePointer();
+    }
 
+    private void drawMousePointer()
+    {
+        Vector3 lastStationPosition = stations[stations.Count - 1].transform.position;
+        drawSegmentBetweenPositions(lastStationPosition, mousePosition);
+    }
+
+    private void drawLineBetweenStations()
+    {
         Vector3 lastPos = stations[0].transform.position;
 
-        for (int i = 1; i < stations.Length; ++i)
+        for (int i = 1; i < stations.Count; ++i)
         {
             Vector3 currPos = stations[i].transform.position;
-            Vector3 inflexionPoint = getInflexionPoint(lastPos, currPos);
-            spawnNewLineSegment(lastPos, inflexionPoint);
-            spawnNewLineSegment(inflexionPoint, currPos);
+            drawSegmentBetweenPositions(lastPos, currPos);
             lastPos = currPos;
         }
+    }
 
-
+    private void drawSegmentBetweenPositions(Vector3 lastPos, Vector3 currPos)
+    {
+        Vector3 inflexionPoint = getInflexionPoint(lastPos, currPos);
+        spawnNewLineSegment(lastPos, inflexionPoint);
+        spawnNewLineSegment(inflexionPoint, currPos);
     }
 
     private void destroyPreviousLineRendererObjects()
@@ -63,7 +96,6 @@ public class DrawCurve : MonoBehaviour
         this.lineRendererObjects.Add(gameObject);
         addPointToLineRenderer(A);
         addPointToLineRenderer(B);
-
     }
 
 

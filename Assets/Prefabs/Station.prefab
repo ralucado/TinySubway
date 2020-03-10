@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 802144211691678597}
   - component: {fileID: 6669604410543161275}
+  - component: {fileID: 3963117222424207750}
+  - component: {fileID: -6510395552707881175}
   m_Layer: 0
   m_Name: Station
   m_TagString: station
@@ -81,3 +83,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
+--- !u!58 &3963117222424207750
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 802144211691678594}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.32
+--- !u!114 &-6510395552707881175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 802144211691678594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 634fd57e307190545aef720c36bbbc81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lineManager: {fileID: 0}
