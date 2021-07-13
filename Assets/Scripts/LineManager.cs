@@ -1,21 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class LineManager : MonoBehaviour
 {
     public GameObject linePrefab;
 
-    private List<GameObject> availableLines;
-    private List<GameObject> usedLines;
-    private GameObject selectedLine;
+    public List<GameObject> availableLines;
+    public List<GameObject> usedLines;
+    private GameObject selectionFromStation;
+    private GameObject selectedLine = null;
 
-    private bool selectMode = false;
+    public bool selectMode;
     // Start is called before the first frame update
     void Start()
     {
         initVariables();
         populateAvailableLinesArray();
+    }
+
+    private void initVariables()
+    {
+        availableLines = new List<GameObject>();
+        usedLines = new List<GameObject>();
+        turnOffSelectMode();
     }
 
     private void populateAvailableLinesArray()
@@ -24,43 +33,53 @@ public class LineManager : MonoBehaviour
         availableLines.Add(defaultLineGameObject);
     }
 
-    private void initVariables()
-    {
-        availableLines = new List<GameObject>();
-        usedLines = new List<GameObject>();
-    }
-
     // Update is called once per frame
     void Update()
     {
-        if (selectMode)
+        if (selectedLine)
         {
-            selectedLine.GetComponent<LineDrawer>().setMousePosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            if (selectMode)
+                selectedLine.GetComponent<LineDrawer>().startDrawingMouse(selectionFromStation.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            else
+                selectedLine.GetComponent<LineDrawer>().stopDrawingMouse();
         }
     }
 
     public void stationClicked(GameObject station)
     {
         Debug.Log("Clicked on station: " + station.name);
-        if (availableLines.Count > 0)
+        if(!selectedLine)
         {
-            selectNewLine();
-            turnOnSelectMode();
-            addStationToSelectedLine(station);
+            if (availableLines.Count > 0)
+                selectNewLine();
+            else
+                return;
         }
+        turnOnSelectMode();
+        selectionFromStation = station;
     }
 
     public void mouseEnteredStation(GameObject station)
     {
-        if (selectMode)
+        //Debug.Log("Mouse entered station: " + station.name);
+        if(selectMode && station != selectionFromStation)
         {
+            addStationToSelectedLine(selectionFromStation);
             addStationToSelectedLine(station);
+            selectionFromStation = station;
         }
+
     }
 
     private void selectNewLine()
     {
-        selectedLine = availableLines[0];
+        if(availableLines.Count > 0)
+        {
+            selectedLine = availableLines[0];
+            usedLines.Add(selectedLine);
+            availableLines.RemoveAt(0);
+        }
+        
     }
 
 
@@ -76,14 +95,14 @@ public class LineManager : MonoBehaviour
 
     private void turnOnSelectMode()
     {
+        Debug.Log("Turned ON select mode");
         selectMode = true;
-        selectedLine.GetComponent<LineDrawer>().setSelectMode(selectMode);
     }
 
     private void turnOffSelectMode()
     {
+        Debug.Log("Turned OFF select mode");
         selectMode = false;
-        selectedLine.GetComponent<LineDrawer>().setSelectMode(selectMode);
     }
 
     

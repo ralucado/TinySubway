@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class LineDrawer : MonoBehaviour
@@ -13,24 +14,34 @@ public class LineDrawer : MonoBehaviour
 
     public List<GameObject> stations;
 
-    private Vector3 mousePosition;
-
-    private bool selectMode;
+    private bool drawMouse;
+    private Vector3 mouseStartPosition, mouseEndPosition;
 
     public void addStation(GameObject station)
     {
+        if(stations.Count > 0)
+            if (stations[stations.Count - 1] == station)
+            {
+                Debug.Log("Cannot add station: " + station.name);
+                return;
+
+            }
         stations.Add(station);
+        Debug.Log("Added station: " + station.name);
     }
 
-    public void setMousePosition(Vector3 position)
+    public void startDrawingMouse(Vector3 stationPosition, Vector3 mousePosition)
     {
-        mousePosition = position;
+        drawMouse = true;
+        mouseStartPosition = stationPosition;
+        mouseEndPosition = mousePosition;
     }
 
-    public void setSelectMode(bool mode)
+    public void stopDrawingMouse()
     {
-        selectMode = mode;
+        drawMouse = false;
     }
+
 
     private void Start()
     {
@@ -38,7 +49,6 @@ public class LineDrawer : MonoBehaviour
         Application.targetFrameRate = 60;
         //stations = GameObject.FindGameObjectsWithTag("station");
         lineRendererObjects = new List<GameObject>();
-        selectMode = false;
     }
 
     // Update is called once per frame
@@ -47,14 +57,9 @@ public class LineDrawer : MonoBehaviour
         destroyPreviousLineRendererObjects();
         if (stations.Count > 0)
             drawLineBetweenStations();
-        if (selectMode)
-            drawMousePointer();
-    }
+        if (drawMouse)
+            drawSegmentBetweenPositions(mouseStartPosition, mouseEndPosition);
 
-    private void drawMousePointer()
-    {
-        Vector3 lastStationPosition = stations[stations.Count - 1].transform.position;
-        drawSegmentBetweenPositions(lastStationPosition, mousePosition);
     }
 
     private void drawLineBetweenStations()
