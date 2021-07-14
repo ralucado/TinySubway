@@ -8,9 +8,7 @@ public class LineDrawer : MonoBehaviour
 {
     public GameObject lineRendererPrefab;
 
-    private List<GameObject> lineRendererObjects;
-
-    private LineRenderer line;
+    public List<GameObject> lineRendererObjects;
 
     public List<GameObject> stations;
 
@@ -55,10 +53,10 @@ public class LineDrawer : MonoBehaviour
     void Update()
     {
         destroyPreviousLineRendererObjects();
-        if (stations.Count > 0)
-            drawLineBetweenStations();
         if (drawMouse)
             drawSegmentBetweenPositions(mouseStartPosition, mouseEndPosition);
+        if (stations.Count > 0)
+            drawLineBetweenStations();
 
     }
 
@@ -85,22 +83,24 @@ public class LineDrawer : MonoBehaviour
     {
         for (int i = 0; i < lineRendererObjects.Count; ++i)
             Destroy(lineRendererObjects[i]);
-    }
+        lineRendererObjects.Clear();
 
-    private void addPointToLineRenderer(Vector3 point)
-    {
-        line.positionCount++;
-        line.SetPosition(line.positionCount - 1, point);
     }
 
     private void spawnNewLineSegment(Vector3 A, Vector3 B)
     {
         //Spawn the gameobject as a parent of this object
-        GameObject gameObject = Instantiate(this.lineRendererPrefab, this.transform);
-        this.line = gameObject.GetComponent<LineRenderer>();
-        this.lineRendererObjects.Add(gameObject);
-        addPointToLineRenderer(A);
-        addPointToLineRenderer(B);
+        GameObject lineRendererGameObject = Instantiate(this.lineRendererPrefab, this.transform);
+        LineRenderer lineRenderer = lineRendererGameObject.GetComponent<LineRenderer>();
+        this.lineRendererObjects.Add(lineRendererGameObject);
+        addPointToLineRenderer(B, lineRenderer);
+        addPointToLineRenderer(A, lineRenderer);
+    }
+
+    private void addPointToLineRenderer(Vector3 point, LineRenderer lineRenderer)
+    {
+        lineRenderer.positionCount++;
+        lineRenderer.SetPosition(lineRenderer.positionCount - 1, point);
     }
 
 

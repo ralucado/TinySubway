@@ -39,7 +39,10 @@ public class LineManager : MonoBehaviour
         if (selectedLine)
         {
             if (selectMode)
-                selectedLine.GetComponent<LineDrawer>().startDrawingMouse(selectionFromStation.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            {
+                Vector3 mousePositionWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                selectedLine.GetComponent<LineDrawer>().startDrawingMouse(selectionFromStation.transform.position, new Vector3(mousePositionWorld.x, mousePositionWorld.y, 0));
+            }
             else
                 selectedLine.GetComponent<LineDrawer>().stopDrawingMouse();
         }
