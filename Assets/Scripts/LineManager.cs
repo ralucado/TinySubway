@@ -11,6 +11,7 @@ public class LineManager : MonoBehaviour
     public List<GameObject> usedLines;
     private GameObject selectionFromStation;
     private GameObject selectedLine = null;
+    private bool usedSelectedLine = false;
 
     public bool selectMode;
     // Start is called before the first frame update
@@ -29,8 +30,10 @@ public class LineManager : MonoBehaviour
 
     private void populateAvailableLinesArray()
     {
-        GameObject defaultLineGameObject = Instantiate(this.linePrefab, this.transform);
-        availableLines.Add(defaultLineGameObject);
+        GameObject line1 = Instantiate(this.linePrefab, this.transform);
+        availableLines.Add(line1);
+        GameObject line2 = Instantiate(this.linePrefab, this.transform);
+        availableLines.Add(line2);
     }
 
     // Update is called once per frame
@@ -51,15 +54,12 @@ public class LineManager : MonoBehaviour
     public void stationClicked(GameObject station)
     {
         Debug.Log("Clicked on station: " + station.name);
-        if(!selectedLine)
+        if (availableLines.Count > 0)
         {
-            if (availableLines.Count > 0)
-                selectNewLine();
-            else
-                return;
+            selectNewLine();
+            turnOnSelectMode(); 
+            selectionFromStation = station;
         }
-        turnOnSelectMode();
-        selectionFromStation = station;
     }
 
     public void mouseEnteredStation(GameObject station)
@@ -76,19 +76,20 @@ public class LineManager : MonoBehaviour
 
     private void selectNewLine()
     {
-        if(availableLines.Count > 0)
-        {
-            selectedLine = availableLines[0];
-            usedLines.Add(selectedLine);
-            availableLines.RemoveAt(0);
-        }
-        
+        selectedLine = availableLines[0];
+        usedSelectedLine = false;
     }
 
 
     private void addStationToSelectedLine(GameObject station)
     {
         selectedLine.GetComponent<LineDrawer>().addStation(station);
+        if (!usedSelectedLine)
+        {
+            usedLines.Add(selectedLine);
+            availableLines.RemoveAt(0);
+            usedSelectedLine = true;
+        }
     }
 
     public void mouseReleased()
