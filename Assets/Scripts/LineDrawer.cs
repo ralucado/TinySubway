@@ -13,7 +13,13 @@ public class LineDrawer : MonoBehaviour
     public List<GameObject> stations;
 
     private bool drawMouse;
+    private Color lineColor = Color.cyan;
     private Vector3 mouseStartPosition, mouseEndPosition;
+
+    public void setLineColor(Color color)
+    {
+        lineColor = color;
+    }
 
     public void addStation(GameObject station)
     {
@@ -92,6 +98,7 @@ public class LineDrawer : MonoBehaviour
         //Spawn the gameobject as a parent of this object
         GameObject lineRendererGameObject = Instantiate(this.lineRendererPrefab, this.transform);
         LineRenderer lineRenderer = lineRendererGameObject.GetComponent<LineRenderer>();
+        lineRenderer.endColor = lineRenderer.startColor = lineColor;
         this.lineRendererObjects.Add(lineRendererGameObject);
         addPointToLineRenderer(B, lineRenderer);
         addPointToLineRenderer(A, lineRenderer);

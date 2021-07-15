@@ -30,10 +30,16 @@ public class LineManager : MonoBehaviour
 
     private void populateAvailableLinesArray()
     {
-        GameObject line1 = Instantiate(this.linePrefab, this.transform);
-        availableLines.Add(line1);
-        GameObject line2 = Instantiate(this.linePrefab, this.transform);
-        availableLines.Add(line2);
+        GameObject blueLine = Instantiate(this.linePrefab, this.transform);
+        availableLines.Add(blueLine);
+
+        GameObject pinkLine = Instantiate(this.linePrefab, this.transform);
+        pinkLine.GetComponent<LineDrawer>().setLineColor(Color.magenta);
+        availableLines.Add(pinkLine);
+
+        GameObject yellowLine = Instantiate(this.linePrefab, this.transform);
+        yellowLine.GetComponent<LineDrawer>().setLineColor(Color.yellow);
+        availableLines.Add(yellowLine);
     }
 
     // Update is called once per frame
