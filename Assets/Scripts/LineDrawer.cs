@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class LineDrawer : MonoBehaviour
 {
-    public GameObject lineRendererPrefab;
+    public GameObject middleLineRendererPrefab;
+    public GameObject endLineRendererPrefab;
 
     public List<GameObject> lineRendererObjects;
 
@@ -81,7 +82,11 @@ public class LineDrawer : MonoBehaviour
 
         Vector3 direction = Vector3.Normalize(end - inflexion);
         Vector3 lineEnd = end + direction;
-        spawnNewLineSegment(end, lineEnd);
+        spawnNewLineSegment(end, lineEnd, endLineRendererPrefab);
+        Vector2 perpendicular = Vector2.Perpendicular(new Vector2(direction.x, direction.y));
+        spawnNewLineSegment(lineEnd, lineEnd + new Vector3(perpendicular.x, perpendicular.y, lineEnd.z)/2, endLineRendererPrefab);
+        spawnNewLineSegment(lineEnd, lineEnd - new Vector3(perpendicular.x, perpendicular.y, lineEnd.z)/2, endLineRendererPrefab);
+
     }
 
     private void drawLineBetweenStations()
@@ -102,8 +107,8 @@ public class LineDrawer : MonoBehaviour
     private void drawSegmentBetweenPositions(Vector3 lastPos, Vector3 currPos)
     {
         Vector3 inflexionPoint = getInflexionPoint(lastPos, currPos);
-        spawnNewLineSegment(lastPos, inflexionPoint);
-        spawnNewLineSegment(inflexionPoint, currPos);
+        spawnNewLineSegment(lastPos, inflexionPoint, middleLineRendererPrefab);
+        spawnNewLineSegment(inflexionPoint, currPos, middleLineRendererPrefab);
     }
 
     private void destroyPreviousLineRendererObjects()
@@ -114,10 +119,10 @@ public class LineDrawer : MonoBehaviour
 
     }
 
-    private void spawnNewLineSegment(Vector3 A, Vector3 B)
+    private void spawnNewLineSegment(Vector3 A, Vector3 B, GameObject lineRendererPrefab)
     {
         //Spawn the gameobject as a parent of this object
-        GameObject lineRendererGameObject = Instantiate(this.lineRendererPrefab, this.transform);
+        GameObject lineRendererGameObject = Instantiate(lineRendererPrefab, this.transform);
         LineRenderer lineRenderer = lineRendererGameObject.GetComponent<LineRenderer>();
         lineRenderer.endColor = lineRenderer.startColor = lineColor;
         this.lineRendererObjects.Add(lineRendererGameObject);

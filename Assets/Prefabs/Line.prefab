@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8826409891420755642}
   - component: {fileID: 8826409891420755645}
   m_Layer: 0
-  m_Name: Line 1
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,6 +43,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e2645f4e140bd645acb3036a7e8a3c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lineRendererPrefab: {fileID: 897775342631536448, guid: 0a2fe32aeb773b14b8f91998505e44c5,
+  middleLineRendererPrefab: {fileID: 897775342631536448, guid: 0a2fe32aeb773b14b8f91998505e44c5,
     type: 3}
+  endLineRendererPrefab: {fileID: 8920281654166380784, guid: 8ffbc91e4b1926d4294240fc90593d5d,
+    type: 3}
+  lineRendererObjects: []
   stations: []
+  linePoints: []

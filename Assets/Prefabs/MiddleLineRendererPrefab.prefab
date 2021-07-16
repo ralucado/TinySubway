@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8110525390109357964}
   - component: {fileID: 6006617554681464251}
   m_Layer: 0
-  m_Name: LineRendererPrefab
+  m_Name: MiddleLineRendererPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -80,7 +80,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.3950615
+        value: 0.30103683
         inSlope: 0
         outSlope: 0
         tangentMode: 0
