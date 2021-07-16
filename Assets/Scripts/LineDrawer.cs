@@ -11,6 +11,7 @@ public class LineDrawer : MonoBehaviour
     public List<GameObject> lineRendererObjects;
 
     public List<GameObject> stations;
+    public List<Vector3> linePoints;
 
     private bool drawMouse;
     private Color lineColor = Color.cyan;
@@ -61,21 +62,41 @@ public class LineDrawer : MonoBehaviour
         destroyPreviousLineRendererObjects();
         if (drawMouse)
             drawSegmentBetweenPositions(mouseStartPosition, mouseEndPosition);
-        if (stations.Count > 0)
+        if (stations.Count > 1)
+        {
             drawLineBetweenStations();
+            drawLineEndings();
+        }
 
+    }
+
+    private void drawLineEndings()
+    {
+        spawnLineEnding(linePoints[0], linePoints[1]);
+        spawnLineEnding(linePoints[linePoints.Count-1], linePoints[linePoints.Count - 2]);
+    }
+
+    private void spawnLineEnding(Vector3 end, Vector3 inflexion)
+    {
+
+        Vector3 direction = Vector3.Normalize(end - inflexion);
+        Vector3 lineEnd = end + direction;
+        spawnNewLineSegment(end, lineEnd);
     }
 
     private void drawLineBetweenStations()
     {
         Vector3 lastPos = stations[0].transform.position;
-
+        linePoints.Clear();
         for (int i = 1; i < stations.Count; ++i)
         {
             Vector3 currPos = stations[i].transform.position;
             drawSegmentBetweenPositions(lastPos, currPos);
+            linePoints.Add(lastPos);
+            linePoints.Add(getInflexionPoint(lastPos, currPos));
             lastPos = currPos;
         }
+        linePoints.Add(lastPos);
     }
 
     private void drawSegmentBetweenPositions(Vector3 lastPos, Vector3 currPos)
