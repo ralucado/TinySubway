@@ -61,20 +61,19 @@ public class LineDrawer : MonoBehaviour
     void Update()
     {
         destroyPreviousLineRendererObjects();
+        if (stations.Count > 1)
+            drawLineBetweenStations();
         if (drawMouse)
             drawSegmentBetweenPositions(mouseStartPosition, mouseEndPosition);
-        if (stations.Count > 1)
-        {
-            drawLineBetweenStations();
-            drawLineEndings();
-        }
+        drawLineEndings();
 
     }
 
     private void drawLineEndings()
     {
         spawnLineEnding(linePoints[0], linePoints[1]);
-        spawnLineEnding(linePoints[linePoints.Count-1], linePoints[linePoints.Count - 2]);
+        if(!drawMouse)
+            spawnLineEnding(linePoints[linePoints.Count-1], linePoints[linePoints.Count - 2]);
     }
 
     private void spawnLineEnding(Vector3 end, Vector3 inflexion)
@@ -92,13 +91,11 @@ public class LineDrawer : MonoBehaviour
     private void drawLineBetweenStations()
     {
         Vector3 lastPos = stations[0].transform.position;
-        linePoints.Clear();
+        
         for (int i = 1; i < stations.Count; ++i)
         {
             Vector3 currPos = stations[i].transform.position;
             drawSegmentBetweenPositions(lastPos, currPos);
-            linePoints.Add(lastPos);
-            linePoints.Add(getInflexionPoint(lastPos, currPos));
             lastPos = currPos;
         }
         linePoints.Add(lastPos);
@@ -108,7 +105,9 @@ public class LineDrawer : MonoBehaviour
     {
         Vector3 inflexionPoint = getInflexionPoint(lastPos, currPos);
         spawnNewLineSegment(lastPos, inflexionPoint, middleLineRendererPrefab);
+        linePoints.Add(lastPos);
         spawnNewLineSegment(inflexionPoint, currPos, middleLineRendererPrefab);
+        linePoints.Add(inflexionPoint);
     }
 
     private void destroyPreviousLineRendererObjects()
@@ -116,7 +115,7 @@ public class LineDrawer : MonoBehaviour
         for (int i = 0; i < lineRendererObjects.Count; ++i)
             Destroy(lineRendererObjects[i]);
         lineRendererObjects.Clear();
-
+        linePoints.Clear();
     }
 
     private void spawnNewLineSegment(Vector3 A, Vector3 B, GameObject lineRendererPrefab)
