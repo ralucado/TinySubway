@@ -11,8 +11,7 @@ public class LineDrawer : MonoBehaviour
 
     public List<GameObject> lineRendererObjects;
 
-    public List<GameObject> stations;
-    public List<Vector3> linePoints;
+    public StationManager stationManager;
 
     private bool drawMouse;
     private Color lineColor = Color.cyan;
@@ -25,14 +24,13 @@ public class LineDrawer : MonoBehaviour
 
     public void addStation(GameObject station)
     {
-        if(stations.Count > 0)
-            if (stations[stations.Count - 1] == station)
+        if(stationManager.getStationsNumber() > 0)
+            if (stationManager.getStation(-1) == station)
             {
                 Debug.Log("Cannot add station: " + station.name);
                 return;
-
             }
-        stations.Add(station);
+        stationManager.addStation(station);
         Debug.Log("Added station: " + station.name);
     }
 
@@ -53,7 +51,6 @@ public class LineDrawer : MonoBehaviour
     {
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
-        //stations = GameObject.FindGameObjectsWithTag("station");
         lineRendererObjects = new List<GameObject>();
     }
 
@@ -61,7 +58,7 @@ public class LineDrawer : MonoBehaviour
     void Update()
     {
         destroyPreviousLineRendererObjects();
-        if (stations.Count > 1)
+        if (stationManager.getStationsNumber() > 1)
             drawLineBetweenStations();
         if (drawMouse)
             drawSegmentBetweenPositions(mouseStartPosition, mouseEndPosition);
@@ -71,7 +68,7 @@ public class LineDrawer : MonoBehaviour
 
     private void drawLineEndings()
     {
-        spawnLineEnding(linePoints[0], linePoints[1]);
+        spawnLineEnding(stationManager.getStationPoints(0));
         if(!drawMouse)
             spawnLineEnding(linePoints[linePoints.Count-1], linePoints[linePoints.Count - 2]);
     }
