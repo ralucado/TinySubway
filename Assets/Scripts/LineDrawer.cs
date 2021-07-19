@@ -52,6 +52,7 @@ public class LineDrawer : MonoBehaviour
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
         lineRendererObjects = new List<GameObject>();
+        stationManager = new StationManager();
     }
 
     // Update is called once per frame
@@ -68,9 +69,12 @@ public class LineDrawer : MonoBehaviour
 
     private void drawLineEndings()
     {
-        spawnLineEnding(stationManager.getStationPoints(0));
-        if(!drawMouse)
-            spawnLineEnding(linePoints[linePoints.Count-1], linePoints[linePoints.Count - 2]);
+        if (stationManager.getLinePointsNumber() >= 2)
+        {
+            spawnLineEnding(stationManager.getLinePoint(0), stationManager.getLinePoint(1));
+            if (!drawMouse)
+                spawnLineEnding(stationManager.getLinePoint(-1), stationManager.getLinePoint(-2));
+        }
     }
 
     private void spawnLineEnding(Vector3 end, Vector3 inflexion)
@@ -87,24 +91,24 @@ public class LineDrawer : MonoBehaviour
 
     private void drawLineBetweenStations()
     {
-        Vector3 lastPos = stations[0].transform.position;
+        Vector3 lastPos = stationManager.getStation(0).transform.position;
         
-        for (int i = 1; i < stations.Count; ++i)
+        for (int i = 1; i < stationManager.getStationsNumber(); ++i)
         {
-            Vector3 currPos = stations[i].transform.position;
+            Vector3 currPos = stationManager.getStation(i).transform.position;
             drawSegmentBetweenPositions(lastPos, currPos);
             lastPos = currPos;
         }
-        linePoints.Add(lastPos);
+        stationManager.addLinePoint(lastPos);
     }
 
     private void drawSegmentBetweenPositions(Vector3 lastPos, Vector3 currPos)
     {
         Vector3 inflexionPoint = getInflexionPoint(lastPos, currPos);
         spawnNewLineSegment(lastPos, inflexionPoint, middleLineRendererPrefab);
-        linePoints.Add(lastPos);
+        stationManager.addLinePoint(lastPos);
         spawnNewLineSegment(inflexionPoint, currPos, middleLineRendererPrefab);
-        linePoints.Add(inflexionPoint);
+        stationManager.addLinePoint(inflexionPoint);
     }
 
     private void destroyPreviousLineRendererObjects()
@@ -112,7 +116,7 @@ public class LineDrawer : MonoBehaviour
         for (int i = 0; i < lineRendererObjects.Count; ++i)
             Destroy(lineRendererObjects[i]);
         lineRendererObjects.Clear();
-        linePoints.Clear();
+        stationManager.clearLinePoints();
     }
 
     private void spawnNewLineSegment(Vector3 A, Vector3 B, GameObject lineRendererPrefab)
