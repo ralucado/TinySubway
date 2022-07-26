@@ -11,7 +11,10 @@ public class LineDrawer : MonoBehaviour
 
     public List<GameObject> lineRendererObjects;
 
-    public StationManager stationManager;
+    public MetroLine metroLine;
+    public List<Vector3> linePoints;
+
+
 
     private bool drawMouse;
     private Color lineColor = Color.cyan;
@@ -24,13 +27,13 @@ public class LineDrawer : MonoBehaviour
 
     public void addStation(GameObject station)
     {
-        if(stationManager.getStationsNumber() > 0)
-            if (stationManager.getStation(-1) == station)
+        if(metroLine.getStationsNumber() > 0)
+            if (metroLine.getStation(-1) == station)
             {
                 Debug.Log("Cannot add station: " + station.name);
                 return;
             }
-        stationManager.addStation(station);
+        metroLine.addStation(station);
         Debug.Log("Added station: " + station.name);
     }
 
@@ -52,14 +55,15 @@ public class LineDrawer : MonoBehaviour
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
         lineRendererObjects = new List<GameObject>();
-        stationManager = new StationManager();
+        metroLine = new MetroLine();
+        linePoints = new List<Vector3>();
     }
 
     // Update is called once per frame
     void Update()
     {
         destroyPreviousLineRendererObjects();
-        if (stationManager.getStationsNumber() > 1)
+        if (metroLine.getStationsNumber() > 1)
             drawLineBetweenStations();
         if (drawMouse)
             drawSegmentBetweenPositions(mouseStartPosition, mouseEndPosition);
@@ -69,11 +73,11 @@ public class LineDrawer : MonoBehaviour
 
     private void drawLineEndings()
     {
-        if (stationManager.getLinePointsNumber() >= 2)
+        if (getLinePointsNumber() >= 2)
         {
-            spawnLineEnding(stationManager.getLinePoint(0), stationManager.getLinePoint(1));
+            spawnLineEnding(getLinePoint(0), getLinePoint(1));
             if (!drawMouse)
-                spawnLineEnding(stationManager.getLinePoint(-1), stationManager.getLinePoint(-2));
+                spawnLineEnding(getLinePoint(-1), getLinePoint(-2));
         }
     }
 
@@ -91,24 +95,24 @@ public class LineDrawer : MonoBehaviour
 
     private void drawLineBetweenStations()
     {
-        Vector3 lastPos = stationManager.getStation(0).transform.position;
+        Vector3 lastPos = metroLine.getStation(0).transform.position;
         
-        for (int i = 1; i < stationManager.getStationsNumber(); ++i)
+        for (int i = 1; i < metroLine.getStationsNumber(); ++i)
         {
-            Vector3 currPos = stationManager.getStation(i).transform.position;
+            Vector3 currPos = metroLine.getStation(i).transform.position;
             drawSegmentBetweenPositions(lastPos, currPos);
             lastPos = currPos;
         }
-        stationManager.addLinePoint(lastPos);
+        addLinePoint(lastPos);
     }
 
     private void drawSegmentBetweenPositions(Vector3 lastPos, Vector3 currPos)
     {
         Vector3 inflexionPoint = getInflexionPoint(lastPos, currPos);
         spawnNewLineSegment(lastPos, inflexionPoint, middleLineRendererPrefab);
-        stationManager.addLinePoint(lastPos);
+        addLinePoint(lastPos);
         spawnNewLineSegment(inflexionPoint, currPos, middleLineRendererPrefab);
-        stationManager.addLinePoint(inflexionPoint);
+        addLinePoint(inflexionPoint);
     }
 
     private void destroyPreviousLineRendererObjects()
@@ -116,7 +120,7 @@ public class LineDrawer : MonoBehaviour
         for (int i = 0; i < lineRendererObjects.Count; ++i)
             Destroy(lineRendererObjects[i]);
         lineRendererObjects.Clear();
-        stationManager.clearLinePoints();
+        clearLinePoints();
     }
 
     private void spawnNewLineSegment(Vector3 A, Vector3 B, GameObject lineRendererPrefab)
@@ -163,5 +167,32 @@ public class LineDrawer : MonoBehaviour
         if ((delta.x > 0 && delta.y > 0) || (delta.x < 0 && delta.y < 0))
             return 1.0f;
         return -1.0f;
+    }
+
+    internal Vector3 getLinePoint(int i)
+    {
+        if (i < linePoints.Count && linePoints.Count > 0)
+        {
+            if (i >= 0)
+                return linePoints[i];
+            else if (Math.Abs(i) <= linePoints.Count)
+                return linePoints[linePoints.Count + i];
+        }
+        throw new ArgumentException("The required line point position is not available");
+    }
+
+    internal int getLinePointsNumber()
+    {
+        return linePoints.Count;
+    }
+
+    internal void addLinePoint(Vector3 point)
+    {
+        linePoints.Add(point);
+    }
+
+    internal void clearLinePoints()
+    {
+        linePoints.Clear();
     }
 }
