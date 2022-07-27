@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class LineManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     public GameObject linePrefab;
-
     public List<GameObject> availableLines;
     public List<GameObject> usedLines;
+
+
     private GameObject selectionFromStation;
     private GameObject selectedLine = null;
     private bool usedSelectedLine = false;
+    private bool selectMode = false;
 
-    public bool selectMode;
     // Start is called before the first frame update
     void Start()
     {
@@ -50,10 +51,10 @@ public class LineManager : MonoBehaviour
             if (selectMode)
             {
                 Vector3 mousePositionWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                selectedLine.GetComponent<LineDrawer>().startDrawingMouse(selectionFromStation.transform.position, new Vector3(mousePositionWorld.x, mousePositionWorld.y, 0));
+                selectedLine.GetComponent<LineDrawer>().selected(selectionFromStation.transform.position, new Vector3(mousePositionWorld.x, mousePositionWorld.y, 0));
             }
             else
-                selectedLine.GetComponent<LineDrawer>().stopDrawingMouse();
+                selectedLine.GetComponent<LineDrawer>().unselected();
         }
     }
 

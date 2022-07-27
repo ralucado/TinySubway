@@ -16,7 +16,7 @@ public class LineDrawer : MonoBehaviour
 
 
 
-    private bool drawMouse;
+    private bool isSelected;
     private Color lineColor = Color.cyan;
     private Vector3 mouseStartPosition, mouseEndPosition;
 
@@ -37,16 +37,16 @@ public class LineDrawer : MonoBehaviour
         Debug.Log("Added station: " + station.name);
     }
 
-    public void startDrawingMouse(Vector3 stationPosition, Vector3 mousePosition)
+    public void selected(Vector3 stationPosition, Vector3 mousePosition)
     {
-        drawMouse = true;
+        isSelected = true;
         mouseStartPosition = stationPosition;
         mouseEndPosition = mousePosition;
     }
 
-    public void stopDrawingMouse()
+    public void unselected()
     {
-        drawMouse = false;
+        isSelected = false;
     }
 
 
@@ -63,12 +63,18 @@ public class LineDrawer : MonoBehaviour
     void Update()
     {
         destroyPreviousLineRendererObjects();
+        removeDrawnStationLines();
         if (metroLine.getStationsNumber() > 1)
             drawLineBetweenStations();
-        if (drawMouse)
+        if (isSelected)
             drawSegmentBetweenPositions(mouseStartPosition, mouseEndPosition);
         drawLineEndings();
 
+    }
+
+    private void removeDrawnStationLines()
+    {
+        metroLine.stations
     }
 
     private void drawLineEndings()
@@ -76,7 +82,7 @@ public class LineDrawer : MonoBehaviour
         if (getLinePointsNumber() >= 2)
         {
             spawnLineEnding(getLinePoint(0), getLinePoint(1));
-            if (!drawMouse)
+            if (!isSelected)
                 spawnLineEnding(getLinePoint(-1), getLinePoint(-2));
         }
     }
@@ -95,15 +101,27 @@ public class LineDrawer : MonoBehaviour
 
     private void drawLineBetweenStations()
     {
-        Vector3 lastPos = metroLine.getStation(0).transform.position;
+        Vector3 lastPos = metroLine.getStation(0).transform.position + getLineOffset(metroLine.getStation(0));
         
         for (int i = 1; i < metroLine.getStationsNumber(); ++i)
         {
-            Vector3 currPos = metroLine.getStation(i).transform.position;
+            Vector3 currPos = metroLine.getStation(i).transform.position + getLineOffset(metroLine.getStation(i));
             drawSegmentBetweenPositions(lastPos, currPos);
             lastPos = currPos;
         }
         addLinePoint(lastPos);
+    }
+
+    private Vector3 getLineOffset(GameObject stationObject)
+    {
+        Station station = stationObject.GetComponent<Station>();
+        if (station.getNumberOfDrawnLines() == 0)
+            return new Vector3(0, 0, 0);
+        else
+        {
+            int isThird = station.getNumberOfDrawnLines() % 2;
+            return new Vector3(0.25f-(0.5f * isThird), 0.25f - (0.5f * isThird), 0);
+        }
     }
 
     private void drawSegmentBetweenPositions(Vector3 lastPos, Vector3 currPos)

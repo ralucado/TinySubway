@@ -6,37 +6,53 @@ using UnityEngine.EventSystems;
 public class Station : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
 {
 
-    public GameObject lineManager;
+    public GameObject gameManager;
+    private int numberOfLines;
+    private int drawnLines;
     // Start is called before the first frame update
     void Start()
     {
-        
+        numberOfLines = 0;
+        drawnLines = 0;
     }
 
     // Update is called once per frame
     void Update()
+    {    }
+
+    public void drawInLine()
     {
-        
+        drawnLines += 1;
+    }
+
+    public void eraseLines()
+    {
+        drawnLines = 0;
+    }
+
+    public int getNumberOfDrawnLines()
+    {
+        return drawnLines;
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        lineManager.GetComponent<LineManager>().stationClicked(this.gameObject);
+        gameManager.GetComponent<GameManager>().stationClicked(this.gameObject);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        lineManager.GetComponent<LineManager>().mouseReleased();
+        gameManager.GetComponent<GameManager>().mouseReleased();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        lineManager.GetComponent<LineManager>().mouseEnteredStation(this.gameObject);
+        gameManager.GetComponent<GameManager>().mouseEnteredStation(this.gameObject);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        //lineManager.GetComponent<LineManager>()
+        //lineManager.GetComponent<GameManager>()
 
     }
 }

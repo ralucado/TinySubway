@@ -33,6 +33,7 @@ public class MetroLine
     public void addStation(GameObject station)
     {
         stations.Add(station);
+        station.GetComponent<Station>().addToLine();
     }
 
 }
