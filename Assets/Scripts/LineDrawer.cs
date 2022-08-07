@@ -74,7 +74,6 @@ public class LineDrawer : MonoBehaviour
 
     private void removeDrawnStationLines()
     {
-        metroLine.stations
     }
 
     private void drawLineEndings()
