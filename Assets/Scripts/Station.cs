@@ -7,7 +7,7 @@ public class Station : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IP
 {
 
     public GameObject gameManager;
-    private int drawnLines;
+    public int drawnLines;
     // Start is called before the first frame update
     void Start()
     {

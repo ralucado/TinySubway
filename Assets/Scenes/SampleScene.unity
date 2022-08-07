@@ -274,6 +274,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -6510395552707881175, guid: 745594f1e006c2c48ba9b7f8e486eeb8,
         type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 729494927}
+    - target: {fileID: -6510395552707881175, guid: 745594f1e006c2c48ba9b7f8e486eeb8,
+        type: 3}
       propertyPath: lineManager
       value: 
       objectReference: {fileID: 729494927}
@@ -480,6 +485,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -6510395552707881175, guid: 745594f1e006c2c48ba9b7f8e486eeb8,
         type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 729494927}
+    - target: {fileID: -6510395552707881175, guid: 745594f1e006c2c48ba9b7f8e486eeb8,
+        type: 3}
       propertyPath: lineManager
       value: 
       objectReference: {fileID: 729494927}
@@ -570,6 +580,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -6510395552707881175, guid: 745594f1e006c2c48ba9b7f8e486eeb8,
         type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 729494927}
+    - target: {fileID: -6510395552707881175, guid: 745594f1e006c2c48ba9b7f8e486eeb8,
+        type: 3}
       propertyPath: lineManager
       value: 
       objectReference: {fileID: 729494927}
@@ -657,6 +672,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 277460909}
     m_Modifications:
+    - target: {fileID: -6510395552707881175, guid: 745594f1e006c2c48ba9b7f8e486eeb8,
+        type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 729494927}
     - target: {fileID: -6510395552707881175, guid: 745594f1e006c2c48ba9b7f8e486eeb8,
         type: 3}
       propertyPath: lineManager

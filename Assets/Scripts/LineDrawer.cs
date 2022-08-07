@@ -119,7 +119,7 @@ public class LineDrawer : MonoBehaviour
         else
         {
             int isThird = station.getNumberOfDrawnLines() % 2;
-            return new Vector3(0.25f-(0.5f * isThird), 0.25f - (0.5f * isThird), 0);
+            return new Vector3(0.25f-(0.5f * isThird), 0, 0);
         }
     }
 
