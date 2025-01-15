@@ -37,14 +37,14 @@ public class LineDrawer : MonoBehaviour
         Debug.Log("LINE_DRAWER::Added station: " + station.name);
     }
 
-    public void selected(Vector3 stationPosition, Vector3 mousePosition)
+    public void drawLineToCursor(Vector3 stationPosition, Vector3 mousePosition)
     {
         isSelected = true;
         mouseStartPosition = stationPosition;
         mouseEndPosition = mousePosition;
     }
 
-    public void unselected()
+    public void stopDrawingOnCursor()
     {
         isSelected = false;
     }

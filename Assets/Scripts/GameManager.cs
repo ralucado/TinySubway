@@ -61,10 +61,10 @@ public class GameManager : MonoBehaviour
             if (selectMode)
             {
                 Vector3 mousePositionWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                selectedLine.GetComponent<LineDrawer>().selected(selectionFromStation.transform.position, new Vector3(mousePositionWorld.x, mousePositionWorld.y, 0));
+                selectedLine.GetComponent<LineDrawer>().drawLineToCursor(selectionFromStation.transform.position, new Vector3(mousePositionWorld.x, mousePositionWorld.y, 0));
             }
             else
-                selectedLine.GetComponent<LineDrawer>().unselected();
+                selectedLine.GetComponent<LineDrawer>().stopDrawingOnCursor();
         }
     }
 
