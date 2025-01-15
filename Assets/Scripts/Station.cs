@@ -46,11 +46,12 @@ public class Station : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IP
     public void OnPointerEnter(PointerEventData eventData)
     {
         gameManager.GetComponent<GameManager>().mouseEnteredStation(this.gameObject);
+        transform.localScale = new Vector3(1.1f,1.1f,1.1f);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         //lineManager.GetComponent<GameManager>()
-
+        transform.localScale = Vector3.one;
     }
 }
