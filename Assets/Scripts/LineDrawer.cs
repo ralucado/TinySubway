@@ -30,11 +30,11 @@ public class LineDrawer : MonoBehaviour
         if(metroLine.getStationsNumber() > 0)
             if (metroLine.getStation(-1) == station)
             {
-                Debug.Log("Cannot add station: " + station.name);
+                Debug.Log("LINE_DRAWER::Cannot add station: " + station.name);
                 return;
             }
         metroLine.addStation(station);
-        Debug.Log("Added station: " + station.name);
+        Debug.Log("LINE_DRAWER::Added station: " + station.name);
     }
 
     public void selected(Vector3 stationPosition, Vector3 mousePosition)

@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
 
     public void stationClicked(GameObject station)
     {
-        Debug.Log("Clicked on station: " + station.name);
+        Debug.Log("GAME_MANAGER::Clicked on station: " + station.name);
         if (availableLines.Count > 0)
         {
             selectNewLine();
@@ -71,12 +71,14 @@ public class GameManager : MonoBehaviour
 
     public void mouseEnteredStation(GameObject station)
     {
-        //Debug.Log("Mouse entered station: " + station.name);
-        if(selectMode && station != selectionFromStation)
+        Debug.Log("GAME_MANAGER::Mouse entered station: " + station.name);
+        if(selectMode)
         {
-            addStationToSelectedLine(selectionFromStation);
-            addStationToSelectedLine(station);
-            selectionFromStation = station;
+            if (station != selectionFromStation) {
+                addStationToSelectedLine(selectionFromStation);
+                addStationToSelectedLine(station);
+                selectionFromStation = station;
+            }
         }
 
     }
@@ -106,13 +108,13 @@ public class GameManager : MonoBehaviour
 
     private void turnOnSelectMode()
     {
-        Debug.Log("Turned ON select mode");
+        Debug.Log("GAME_MANAGER::Turned ON select mode");
         selectMode = true;
     }
 
     private void turnOffSelectMode()
     {
-        Debug.Log("Turned OFF select mode");
+        Debug.Log("GAME_MANAGER::Turned OFF select mode");
         selectMode = false;
     }
 
