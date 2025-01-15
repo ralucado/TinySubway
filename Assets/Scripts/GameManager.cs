@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -6,9 +7,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public GameObject linePrefab;
-    public List<GameObject> availableLines;
-    public List<GameObject> usedLines;
-
+    private List<GameObject> availableLines;
+    private List<GameObject> usedLines;
+    [SerializeField] List<Station> stations;
 
     private GameObject selectionFromStation;
     private GameObject selectedLine = null;
@@ -20,6 +21,15 @@ public class GameManager : MonoBehaviour
     {
         initVariables();
         populateAvailableLinesArray();
+        registerListenerMethods();
+    }
+
+    private void registerListenerMethods() {
+        for (int i = 0; i < stations.Count; ++i) {
+            stations[i].a_clicked += onStationClicked;
+            stations[i].a_released += onMouseReleased;
+            stations[i].a_entered += onMouseEnteredStation;
+        }
     }
 
     private void initVariables()
@@ -58,7 +68,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void stationClicked(GameObject station)
+    public void onStationClicked(GameObject station)
     {
         Debug.Log("GAME_MANAGER::Clicked on station: " + station.name);
         if (availableLines.Count > 0)
@@ -69,7 +79,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void mouseEnteredStation(GameObject station)
+    public void onMouseEnteredStation(GameObject station)
     {
         Debug.Log("GAME_MANAGER::Mouse entered station: " + station.name);
         if(selectMode)
@@ -101,7 +111,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void mouseReleased()
+    public void onMouseReleased()
     {
         turnOffSelectMode();
     }
