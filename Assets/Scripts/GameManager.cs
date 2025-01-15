@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
+[Serializable]
 public class GameManager : MonoBehaviour
 {
     public GameObject linePrefab;
@@ -11,17 +11,28 @@ public class GameManager : MonoBehaviour
     private List<GameObject> usedLines;
     [SerializeField] List<Station> stations;
 
+    private GameStateMachine gameStateMachine;
+
     private GameObject selectionFromStation;
     private GameObject selectedLine = null;
     private bool usedSelectedLine = false;
     private bool selectMode = false;
 
+    public GameStateMachine GameStateMachine => gameStateMachine;
+
     // Start is called before the first frame update
+    void Awake() {
+
+        // initialize state machine
+        gameStateMachine = new GameStateMachine();
+    }
+
     void Start()
     {
         initVariables();
         populateAvailableLinesArray();
         registerListenerMethods();
+        gameStateMachine.initialize(gameStateMachine.idleState);
     }
 
     private void registerListenerMethods() {
@@ -56,7 +67,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        gameStateMachine.execute();
         if (selectMode){
             Vector3 mousePositionWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             selectedLine.GetComponent<LineDrawer>().drawLineToCursor(selectionFromStation.transform.position, new Vector3(mousePositionWorld.x, mousePositionWorld.y, 0));
