@@ -56,16 +56,12 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (selectedLine)
-        {
-            if (selectMode)
-            {
-                Vector3 mousePositionWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                selectedLine.GetComponent<LineDrawer>().drawLineToCursor(selectionFromStation.transform.position, new Vector3(mousePositionWorld.x, mousePositionWorld.y, 0));
-            }
-            else
-                selectedLine.GetComponent<LineDrawer>().stopDrawingOnCursor();
-        }
+
+        if (selectMode){
+            Vector3 mousePositionWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            selectedLine.GetComponent<LineDrawer>().drawLineToCursor(selectionFromStation.transform.position, new Vector3(mousePositionWorld.x, mousePositionWorld.y, 0));
+        } else
+        selectedLine.GetComponent<LineDrawer>().stopDrawingOnCursor();
     }
 
     public void onStationClicked(GameObject station)
@@ -114,6 +110,7 @@ public class GameManager : MonoBehaviour
     public void onMouseReleased()
     {
         turnOffSelectMode();
+        //selectedLine = null;
     }
 
     private void turnOnSelectMode()
